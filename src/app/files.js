@@ -1,7 +1,12 @@
-import React from 'react'
-import { UnControlled as CodeMirror } from 'react-codemirror2'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/mode/xml/xml'
+import React, { useState } from 'react'
+// import { UnControlled as CodeMirror } from 'react-codemirror2'
+// import 'codemirror/lib/codemirror.css'
+// import 'codemirror/mode/xml/xml'
+import 'prismjs/themes/prism.css'
+
+import Editor from 'react-simple-code-editor'
+import { highlight, languages } from 'prismjs/components/prism-core'
+import 'prismjs/components/prism-markup'
 
 const ToggleFiles = ({ onClick }) => <button className='card-header-icon' onClick={onClick}>
   <h6 className='subtitle is-5'>
@@ -14,6 +19,28 @@ const ToggleFiles = ({ onClick }) => <button className='card-header-icon' onClic
     <i className='fas fa-angle-down' />
   </span>
 </button>
+
+const initCode = `<?xml version="1.0" encoding="UTF-8"?>
+<testsuite tests="3" failures="1" time="0.0160106">
+    <testcase name="Is An Error" classname="Error" time="0.00075">
+        <error message="There was a error" type="java.lang.RuntimeException">java.lang.RuntimeException: There was an error</error>
+    </testcase>
+</testsuite>`
+
+const Code = () => {
+  const [code, setCode] = useState(initCode)
+  return <Editor
+    value={code}
+    onValueChange={(newCode) => { setCode(newCode) }}
+    highlight={code => highlight(code, languages.markup)}
+    padding={10}
+    style={{
+      backgroundColor: 'whitesmoke',
+      fontFamily: '"Fira code", "Fira Mono", monospace',
+      fontSize: 12
+    }}
+  />
+}
 
 const Files = ({ active = false, setActive, files = [] }) => {
   return <div className={`files card is-${active ? 'active' : 'inactive'}`}>
@@ -71,7 +98,8 @@ const Files = ({ active = false, setActive, files = [] }) => {
       </div>
 
       <input className='input files-input' type='text' defaultValue='/this/is/the/full/filename.xml' placeholder='Filename' disabled={!active} />
-      {active ? <CodeMirror
+      {active ? <Code /> : null}
+      {/* {active ? <CodeMirror
         value={`<?xml version="1.0" encoding="UTF-8"?>
 <testsuite tests="3" failures="1" time="0.0160106">
     <testcase name="Is An Error" classname="Error" time="0.00075">
@@ -85,7 +113,7 @@ const Files = ({ active = false, setActive, files = [] }) => {
         onChange={(cm, { text }, value) => {
 
         }}
-      /> : null}
+      /> : null} */}
     </div>
 
   </div>
